@@ -1,0 +1,477 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #d1d1d1;
+}
+
+.container {
+  display: grid;
+  grid-template-areas: 
+    "specs1 specs2 emissions1"
+    "box1 box1 box1"
+    "ghg-box ghg-box ghg-box"
+    "lowest1 lowest1 lowest1"
+    "lowest2 lowest2 lowest2";
+  grid-template-columns: 1fr 1fr 2fr; /* Makes emissions section twice as wide */
+  grid-gap: 10px;
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-areas: 
+      "specs1 specs2"
+      "emissions1 emissions1"
+      "box1 box1"
+      "ghg-box ghg-box"
+      "lowest1 lowest1"
+      "lowest2 lowest2";
+    grid-template-columns: 2fr; /* Stack elements vertically */
+  }
+
+  .lowest-ghg table td, .lowest-ghg table th {
+    /* padding: 8px; */
+    font-size: 11px;
+  }
+
+  .lowest-ghg table {
+    font-size: 14px;
+  }
+
+  .lowest-ghg table th, .lowest-ghg table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Product 1 Styles */
+.specifications,
+.ghg-emissions-graph,
+.lowest-ghg,
+.overall-ghg-container,
+.boxplot-section{
+  background-color: #eeeff0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.overall-ghg-container{
+  grid-area: ghg-box;
+}
+
+.boxplot {
+  flex: 1; 
+  /* min-width: 200px;  */
+  /* Sets a minimum width for each box plot */
+}
+
+
+.specifications {
+  grid-area: specs1;
+}
+
+.ghg-emissions-graph {
+  grid-area: emissions1;
+}
+
+.lowest-ghg {
+  grid-area: lowest1;
+  /* display: flex; */
+  /* flex-wrap: nowrap; */
+}
+
+.boxplot-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.boxplot-section{
+  grid-area: box1;
+  /* background-color: #2A4365; */
+  padding: 10px;
+  border-radius: 8px;
+}
+
+
+/* Product 2 Styles */
+.specifications.product2 {
+  grid-area: specs2;
+}
+
+.ghg-emissions-graph.product2 {
+  grid-area: emissions2;
+}
+
+.lowest-ghg.product2 {
+  grid-area: lowest2;
+  /* display: flex;
+  flex-wrap: nowrap; */
+}
+
+
+/* Common styles */
+.specifications h3,
+.ghg-emissions-graph h3,
+.lowest-ghg h3 {
+  margin-bottom: 20px;
+}
+
+.boxplot-section h4{
+  /* color:white; */
+  margin-bottom: 10px;
+}
+
+.spec-item {
+  position: relative;
+  /* padding: 10px; */
+  padding-bottom: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.spec-item.disabled {
+  opacity: 0.5;
+}
+
+.spec-item.disabled .disableable {
+  pointer-events: none;
+  background-color: #e0e0e0;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: top;
+  margin-right: 8px;
+}
+
+.checkbox-wrapper input {
+  margin-right: 8px;
+}
+
+
+.min-max {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: grey;
+}
+
+.lowest-ghg table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.lowest-ghg table tr:nth-child(even) {
+  background-color: #FFFFFF;
+  color: #2D3748;
+}
+
+.lowest-ghg table tr:nth-child(odd) {
+  background-color: #EDF2F7;
+  color: #2D3748;
+}
+
+.lowest-ghg table td {
+  padding: 10px;
+  border: 1px solid #dddddd;
+}
+
+.lowest-ghg table th {
+  background-color: rgb(43, 43, 165);
+  color: #FFFFFF;
+  padding: 10px;
+  text-align: left;
+}
+
+.lowest-ghg.product2 table th {
+  background-color: rgb(227, 150, 8);
+  color: #FFFFFF;
+  padding: 10px;
+  text-align: left;
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slider-container {
+  width: 150px;
+  height: 10px;
+  margin: 0 10px;
+  display: flex;
+}
+
+.slider-container .noUi-connect {
+  background: #2A4365; /* Color of the slider track */
+}
+
+.slider-container .noUi-handle {
+  background-color: blue; /* Handle color */
+  border-radius: 50%; /* Make the handle round */
+  width: 20px; /* Adjust handle size */
+  height: 20px; /* Adjust handle size */
+  cursor: pointer; /* Change cursor to pointer when hovering over handle */
+  border: none; /* Remove border */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow for depth */
+}
+
+.slider-container.product2 .noUi-connect {
+  background: #2A4365; /* Color of the slider track */
+}
+
+.slider-container.product2 .noUi-handle {
+  background-color: orange; /* Handle color */
+  border-radius: 50%; /* Make the handle round */
+  width: 20px; /* Adjust handle size */
+  height: 20px; /* Adjust handle size */
+  cursor: pointer; /* Change cursor to pointer when hovering over handle */
+  border: none; /* Remove border */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow for depth */
+}
+
+.slider-container .noUi-handle:before,
+.slider-container .noUi-handle:after {
+  display: none; /* Remove the vertical lines */
+}
+
+
+/* Greyed-out state */
+.spec-item.disabled .slider-container .noUi-connect {
+  background: #efefef;
+}
+
+
+
+input[type="number"] {
+  width: 50px;
+  height: 30px;
+  background-color: #2A4365;
+  border-radius: 4px;
+  margin-top: 5px;
+  color: #fff;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #3b5998;
+}
+
+input[type="number-D2"] {
+  width: 50px;
+  height: 30px;
+  background-color: #2A4365;
+  border-radius: 4px;
+  margin-top: 5px;
+  color: #fff;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+input[type="number-D2"]::-webkit-inner-spin-button,
+input[type="number-D2"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number-D2"]:focus {
+  outline: none;
+  border-color: #2A4365;
+}
+
+#newTextbox,
+#newTextbox2,
+#newTextbox3,
+#newTextbox4,
+#newTextbox5,
+#newTextbox6,
+#newTextbox-D2,
+#newTextbox2-D2,
+#newTextbox3-D2,
+#newTextbox4-D2,
+#newTextbox5-D2,
+#newTextbox6-D2{
+  width: 50px;
+  height: 30px;
+  background-color: #b5b5b5;
+  border-radius: 4px;
+  margin-top: 5px;
+  color: #272727; /* text color */
+  border: 1px solid #ccc;
+  text-align: center;
+  pointer-events: none;
+}
+
+
+header {
+  background-color: #2A4365;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+}
+
+#loading-bar,
+#loading-bar2,
+#loading-bar-D2,
+#loading-bar2-D2 {
+  width: 100%;
+  background-color: grey;
+}
+
+#loading-bar-progress,
+#loading-bar-progress2,
+#loading-bar-progress-D2,
+#loading-bar-progress2-D2 {
+  width: 0%;
+  height: 10px;
+  background-color: #3b5998;
+}
+
+
+/*////////////////////////////////////////////////////////////////////*/
+/* Dark mode styles*/
+body.dark-mode {
+  background-color: #1A202C; /* Dark background */
+  color: #E2E8F0; /* Light text */
+}
+
+
+header.dark-mode {
+  background-color: #2D3748; /* Darker header background */
+}
+
+
+.specifications.dark-mode,
+.ghg-emissions-graph.dark-mode,
+.lowest-ghg.dark-mode,
+.overall-ghg-container.dark-mode,
+.boxplot-section.dark-mode{
+  background-color: #2D3748;
+  /* padding: 10px;
+  border-radius: 8px; */
+}
+
+.spec-item label.dark-mode,
+.lowest-ghg table tr:nth-child(even).dark-mode,
+.lowest-ghg table tr:nth-child(odd).dark-mode {
+  color: #E2E8F0; /* Light text */
+}
+
+.lowest-ghg table tr:nth-child(even).dark-mode {
+  background-color: #2D3748; /* Darker row background */
+}
+
+.lowest-ghg table tr:nth-child(odd).dark-mode {
+  background-color: #3C4558; /* Slightly lighter dark row background */
+}
+
+.lowest-ghg table th.dark-mode {
+  background-color: #1A202C; /* Darker header background */
+  color: #E2E8F0; /* Light text */
+}
+
+.slider-container .noUi-connect.dark-mode {
+  background: #6600ffc4; /* slider track */
+}
+
+.slider-container .noUi-handle.dark-mode {
+  /* background-color: #F56565;  */
+  border: 2px solid #E2E8F0; 
+}
+
+.slider-container.dark-mode {
+  /* width: 300px;
+  margin: 0 20px;
+  display: flex; */
+  background-color: #1A202C;
+}
+
+.toggle-container .dm-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.dm-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.dm-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.dm-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .dm-slider {
+  background-color: #F56565; /* Toggle active color */
+}
+
+input:checked + .dm-slider:before {
+  transform: translateX(26px);
+}
+
+/* Dark mode styles for tables */
+.dark-mode .lowest-ghg table tr:nth-child(even) {
+  background-color: #2D3748; /* Darker background for even rows */
+  color: #E2E8F0; /* Lighter text color */
+}
+
+.dark-mode .lowest-ghg table tr:nth-child(odd) {
+  background-color: #1A202C; /* Darker background for odd rows */
+  color: #E2E8F0; /* Lighter text color */
+}
+
+.dark-mode .lowest-ghg table td {
+  padding: 10px;
+  border: 1px solid #4A5568; /* Darker border color */
+}
+
