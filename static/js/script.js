@@ -590,7 +590,8 @@ function plotData_D2() {
             mode: 'markers',
             type: 'scatter',
             name: 'Filtered Products D2',
-            marker: { size: 8, color: 'orange', opacity: 0.1 },
+            marker: { size: 8, color: 'red', opacity: 0.1 },  
+            // made changes here 
             hoverinfo: 'none'
         };
 
@@ -600,7 +601,8 @@ function plotData_D2() {
             mode: 'markers',
             type: 'scatter',
             name: '5th quantile GHG Prod D2',
-            marker: { size: 12, color: 'orange', symbol: 'star' }
+            marker: { size: 12, color: 'red', symbol: 'star' }
+            // made changes 
         };
 
         const dataToPlot_D2 = [trace2_D2, trace3_D2];
@@ -1222,7 +1224,7 @@ function boxPlot(allDesignPsiList1, SCM_pctData1, CM_massData1, test_PSIData1, a
             type: 'box',
             name: `D2: ${designPsi}`,
             showlegend: false,
-            marker: { color: 'orange' } // Custom color for Design 2
+            marker: { color: 'red' } // Custom color for Design 2 made changes
         }));
 
         return plotData1.concat(plotData2);
@@ -1806,7 +1808,8 @@ async function plotGHGBoxPlot() {
         y: design2GhgEmissions,
         type: 'box',
         name: 'D2',
-        marker: { color: 'orange' }
+        marker: { color: 'red' }
+        // made changes
     };
 
     // Combine traces

@@ -191,7 +191,8 @@ body {
 }
 
 .lowest-ghg.product2 table th {
-  background-color: rgb(227, 150, 8);
+  /* background-color: rgb(227, 150, 8); */
+  background-color: rgb(200, 0, 8);
   color: #FFFFFF;
   padding: 10px;
   text-align: left;
@@ -225,11 +226,13 @@ body {
 }
 
 .slider-container.product2 .noUi-connect {
-  background: #2A4365; /* Color of the slider track */
+  background: rgb(135, 11, 18); /* Color of the slider track  made changes from 2A4365 TO RED*/
 }
 
 .slider-container.product2 .noUi-handle {
-  background-color: orange; /* Handle color */
+  background-color: rgb(200, 0, 8); /* Handle color made changes from orange to red*/ 
+
+
   border-radius: 50%; /* Make the handle round */
   width: 20px; /* Adjust handle size */
   height: 20px; /* Adjust handle size */
