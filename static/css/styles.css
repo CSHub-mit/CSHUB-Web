@@ -22,6 +22,56 @@ body {
   grid-gap: 10px;
   padding: 15px;
 }
+.state-selector {
+  margin-bottom: 20px;
+  background-color: #eeeff0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.state-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #2D3748;
+}
+
+.state-selector select {
+  width: 100%;
+  max-width: 250px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 14px;
+  color: #2D3748;
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.state-selector select:focus {
+  outline: none;
+  border-color: #3b5998;
+}
+
+/*  Dark mode */
+body.dark-mode .state-selector {
+  background-color: #2D3748;
+  color: #E2E8F0;
+}
+
+body.dark-mode .state-selector label {
+  color: #E2E8F0;
+}
+
+body.dark-mode .state-selector select {
+  background-color: #1A202C;
+  color: #E2E8F0;
+  border: 1px solid #4A5568;
+}
+
 
 @media (max-width: 768px) {
   .container {
