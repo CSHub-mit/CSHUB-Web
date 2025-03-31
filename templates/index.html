@@ -1,352 +1,510 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Concrete Products Dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Concrete Products Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-  <header>
-    <div class="header-container">
-      <div class="logo">
-        <img src="https://cshub.mit.edu/wp-content/uploads/2022/06/CSHub_Standard_Vector_Logo.png" alt="MIT CSHub"> <!-- Replace with your logo -->
-      </div>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="logo">
+          <img
+            src="https://cshub.mit.edu/wp-content/uploads/2022/06/CSHub_Standard_Vector_Logo.png"
+            alt="MIT CSHub"
+          />
+          <!-- Replace with your logo -->
+        </div>
         <div class="toggle-container">
-            <label class="dm-switch">
-                <input type="checkbox" id="dark-mode-toggle">
-                <span class="dm-slider"></span>
-            </label>
+          <label class="dm-switch">
+            <input type="checkbox" id="dark-mode-toggle" />
+            <span class="dm-slider"></span>
+          </label>
         </div>
-    </div>
-  </header>
-  <div class="state-selector" style="margin-bottom: 20px;">
-    <label for="state-dropdown"><strong>Select a U.S. State:</strong></label>
-    <select id="state-dropdown">
-      <option value="">-- Select State --</option>
-      <option value="Alabama">Alabama</option>
-      <option value="Alaska">Alaska</option>
-      <option value="Arizona">Arizona</option>
-      <option value="Arkansas">Arkansas</option>
-      <option value="California">California</option>
-      <option value="Colorado">Colorado</option>
-      <option value="Connecticut">Connecticut</option>
-      <option value="Delaware">Delaware</option>
-      <option value="Florida">Florida</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Hawaii">Hawaii</option>
-      <option value="Idaho">Idaho</option>
-      <option value="Illinois">Illinois</option>
-      <option value="Indiana">Indiana</option>
-      <option value="Iowa">Iowa</option>
-      <option value="Kansas">Kansas</option>
-      <option value="Kentucky">Kentucky</option>
-      <option value="Louisiana">Louisiana</option>
-      <option value="Maine">Maine</option>
-      <option value="Maryland">Maryland</option>
-      <option value="Massachusetts">Massachusetts</option>
-      <option value="Michigan">Michigan</option>
-      <option value="Minnesota">Minnesota</option>
-      <option value="Mississippi">Mississippi</option>
-      <option value="Missouri">Missouri</option>
-      <option value="Montana">Montana</option>
-      <option value="Nebraska">Nebraska</option>
-      <option value="Nevada">Nevada</option>
-      <option value="New Hampshire">New Hampshire</option>
-      <option value="New Jersey">New Jersey</option>
-      <option value="New Mexico">New Mexico</option>
-      <option value="New York">New York</option>
-      <option value="North Carolina">North Carolina</option>
-      <option value="North Dakota">North Dakota</option>
-      <option value="Ohio">Ohio</option>
-      <option value="Oklahoma">Oklahoma</option>
-      <option value="Oregon">Oregon</option>
-      <option value="Pennsylvania">Pennsylvania</option>
-      <option value="Rhode Island">Rhode Island</option>
-      <option value="South Carolina">South Carolina</option>
-      <option value="South Dakota">South Dakota</option>
-      <option value="Tennessee">Tennessee</option>
-      <option value="Texas">Texas</option>
-      <option value="Utah">Utah</option>
-      <option value="Vermont">Vermont</option>
-      <option value="Virginia">Virginia</option>
-      <option value="Washington">Washington</option>
-      <option value="West Virginia">West Virginia</option>
-      <option value="Wisconsin">Wisconsin</option>
-      <option value="Wyoming">Wyoming</option>
-    </select>
-  </div>
-
-  <div class="container">
-    <!-- Product 1 -->
-    <div class="specifications">
-    <h3>Design 1 Specifications</h3>
-    <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="strength-checkbox" checked>
-            <label>
-                Design PSI
-            </label>
-        </div>
-        <div class="slider">
-            <div class="min-max">
-                <span>min</span>
-                <input type="number" id="min-strength" class="disableable" value="4000" style="display: block;">
-                <div id="newTextboxContainer" style="display: none;">
-                    <input type="text" id="newTextbox" class="disableable" value="NA">
-                </div>
-            </div>
-            <div class="slider-container disableable" id="strength-container"></div>
-            <div class="min-max">
-                <span>max</span>
-                <input type="number" id="max-strength" class="disableable" value="4000" style="display: block;">
-                <div id="newTextboxContainer2" style="display: none;">
-                    <input type="text" id="newTextbox2" class="disableable" value="NA">
-                </div>
-            </div>
-        </div>
+      </div>
+    </header>
+    <div class="state-selector" style="margin-bottom: 20px">
+      <label for="state-dropdown"><strong>Select a U.S. State:</strong></label>
+      <select id="state-dropdown">
+        <option value="">-- Select State --</option>
+        <option value="Alabama">Alabama</option>
+        <option value="Alaska">Alaska</option>
+        <option value="Arizona">Arizona</option>
+        <option value="Arkansas">Arkansas</option>
+        <option value="California">California</option>
+        <option value="Colorado">Colorado</option>
+        <option value="Connecticut">Connecticut</option>
+        <option value="Delaware">Delaware</option>
+        <option value="Florida">Florida</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Hawaii">Hawaii</option>
+        <option value="Idaho">Idaho</option>
+        <option value="Illinois">Illinois</option>
+        <option value="Indiana">Indiana</option>
+        <option value="Iowa">Iowa</option>
+        <option value="Kansas">Kansas</option>
+        <option value="Kentucky">Kentucky</option>
+        <option value="Louisiana">Louisiana</option>
+        <option value="Maine">Maine</option>
+        <option value="Maryland">Maryland</option>
+        <option value="Massachusetts">Massachusetts</option>
+        <option value="Michigan">Michigan</option>
+        <option value="Minnesota">Minnesota</option>
+        <option value="Mississippi">Mississippi</option>
+        <option value="Missouri">Missouri</option>
+        <option value="Montana">Montana</option>
+        <option value="Nebraska">Nebraska</option>
+        <option value="Nevada">Nevada</option>
+        <option value="New Hampshire">New Hampshire</option>
+        <option value="New Jersey">New Jersey</option>
+        <option value="New Mexico">New Mexico</option>
+        <option value="New York">New York</option>
+        <option value="North Carolina">North Carolina</option>
+        <option value="North Dakota">North Dakota</option>
+        <option value="Ohio">Ohio</option>
+        <option value="Oklahoma">Oklahoma</option>
+        <option value="Oregon">Oregon</option>
+        <option value="Pennsylvania">Pennsylvania</option>
+        <option value="Rhode Island">Rhode Island</option>
+        <option value="South Carolina">South Carolina</option>
+        <option value="South Dakota">South Dakota</option>
+        <option value="Tennessee">Tennessee</option>
+        <option value="Texas">Texas</option>
+        <option value="Utah">Utah</option>
+        <option value="Vermont">Vermont</option>
+        <option value="Virginia">Virginia</option>
+        <option value="Washington">Washington</option>
+        <option value="West Virginia">West Virginia</option>
+        <option value="Wisconsin">Wisconsin</option>
+        <option value="Wyoming">Wyoming</option>
+      </select>
     </div>
 
-    <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="scm-checkbox" checked>
-            <label>
-                SCM pct
-            </label>
-        </div>
-        <div class="slider">
+    <div class="container">
+      <!-- Product 1 -->
+      <div class="specifications">
+        <h3>Design 1 Specifications</h3>
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="strength-checkbox" checked />
+            <label> Design PSI </label>
+          </div>
+
+          <div class="slider">
             <div class="min-max">
-                <span>min</span>
-                <input type="number" id="min-scm-pct" class="disableable" value="0" style="display: block;">
-                <div id="newTextboxContainer3" style="display: none;">
-                    <input type="text" id="newTextbox3" class="disableable" value="NA">
-                </div>
+              <span>min</span>
+              <input
+                type="number"
+                id="min-strength"
+                class="disableable"
+                value="4000"
+                style="display: block"
+              />
+              <div id="newTextboxContainer" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
+            </div>
+            <div
+              class="slider-container disableable"
+              id="strength-container"
+            ></div>
+            <div class="min-max">
+              <span>max</span>
+              <input
+                type="number"
+                id="max-strength"
+                class="disableable"
+                value="4000"
+                style="display: block"
+              />
+              <div id="newTextboxContainer2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="scm-checkbox" checked />
+            <label> SCM pct </label>
+          </div>
+          <div style="margin: 10px 0">
+            <label for="scm-type-select"><strong>SCM Type:</strong></label>
+            <select id="scm-type-select" class="disableable">
+              <option value="fly_ash">Fly Ash</option>
+              <option value="slag">Slag</option>
+            </select>
+          </div>
+          <div class="slider">
+            <div class="min-max">
+              <span>min</span>
+              <input
+                type="number"
+                id="min-scm-pct"
+                class="disableable"
+                value="0"
+                style="display: block"
+              />
+              <div id="newTextboxContainer3" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox3"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
             <div class="slider-container disableable" id="scm-container"></div>
             <div class="min-max">
-                <span>max</span>
-                <input type="number" id="max-scm-pct" class="disableable" value="0.3" style="display: block;">
-                <div id="newTextboxContainer4" style="display: none;">
-                    <input type="text" id="newTextbox4" class="disableable" value="NA">
-                </div>
+              <span>max</span>
+              <input
+                type="number"
+                id="max-scm-pct"
+                class="disableable"
+                value="0.3"
+                style="display: block"
+              />
+              <div id="newTextboxContainer4" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox4"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="cm-checkbox" checked>
-            <label>
-                CM mass
-            </label>
-        </div>
-        <select id="CM-mass-units" class="disableable">
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="cm-checkbox" checked />
+            <label> CM mass </label>
+          </div>
+          <select id="CM-mass-units" class="disableable">
             <option value="1">kg/cy</option>
             <option value="0.453592">lb/cy</option>
             <option value="0.76455485798">kg/m^3</option>
-        </select>
-        <div class="slider">
+          </select>
+          <div class="slider">
             <div class="min-max">
-                <span>min</span>
-                <input type="number" id="min-cm-mass" class="disableable" value="320" style="display: block;">
-                <div id="newTextboxContainer5" style="display: none;">
-                    <input type="text" id="newTextbox5" class="disableable" value="NA">
-                </div>
+              <span>min</span>
+              <input
+                type="number"
+                id="min-cm-mass"
+                class="disableable"
+                value="320"
+                style="display: block"
+              />
+              <div id="newTextboxContainer5" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox5"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
             <div class="slider-container disableable" id="cm-container"></div>
             <div class="min-max">
-                <span>max</span>
-                <input type="number" id="max-cm-mass" class="disableable" value="320" style="display: block;">
-                <div id="newTextboxContainer6" style="display: none;">
-                    <input type="text" id="newTextbox6" class="disableable" value="NA">
-                </div>
+              <span>max</span>
+              <input
+                type="number"
+                id="max-cm-mass"
+                class="disableable"
+                value="320"
+                style="display: block"
+              />
+              <div id="newTextboxContainer6" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox6"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div>
-        <label>1. Analyzing data...</label>
-        <div id="loading-bar" style="display: none;">
-            <div id="loading-bar-progress" style="width: 0%;"></div>
+        <div>
+          <label>1. Analyzing data...</label>
+          <div id="loading-bar" style="display: none">
+            <div id="loading-bar-progress" style="width: 0%"></div>
+          </div>
+          <div id="loading-bar-percentage" style="display: none">0%</div>
         </div>
-        <div id="loading-bar-percentage" style="display: none;">0%</div>
-    </div>
 
-    <div>
-        <label>2. Plotting data...</label>
-        <div id="loading-bar2" style="display: none;">
-            <div id="loading-bar-progress2" style="width: 0%;"></div>
+        <div>
+          <label>2. Plotting data...</label>
+          <div id="loading-bar2" style="display: none">
+            <div id="loading-bar-progress2" style="width: 0%"></div>
+          </div>
+          <div id="loading-bar-percentage2" style="display: none">0%</div>
         </div>
-        <div id="loading-bar-percentage2" style="display: none;">0%</div>
-    </div>
+      </div>
 
-    </div>
+      <div class="ghg-emissions-graph">
+        <h2>Test PSI vs GHG Emissions</h2>
+        <div id="no-results-message" style="display: none; color: red">
+          No results found.
+        </div>
+        <div id="plotDiv" style="display: none"></div>
+      </div>
 
-    <div class="ghg-emissions-graph">
-      <h2>Test PSI vs GHG Emissions</h2>
-            <div id="no-results-message" style="display: none; color: red;">No results found.</div>
-            <div id="plotDiv" style="display: none;"></div>
-    </div>
-
-    <div class="lowest-ghg">
+      <div class="lowest-ghg">
         <h3>Concrete Products with Lowest GHG Emissions - Design 1</h3>
         <label for="top-products">Top Products: </label>
         <select id="top-products">
-            <option value="1">Top 1</option>
-            <option value="5">Top 5</option>
-            <option value="10">Top 10</option>
+          <option value="1">Top 1</option>
+          <option value="5">Top 5</option>
+          <option value="10">Top 10</option>
         </select>
 
         <label for="design-psi-select">Filtering by Design PSI: </label>
         <select id="design-psi-select">
-            <option value="all">All</option>
+          <option value="all">All</option>
         </select>
-        <div id="no-results-message-table1" style="display: none; color: red;">No results found.</div>
-        <table id="top-results" style="display: table;"></table>
-        
-    </div>
+        <div id="no-results-message-table1" style="display: none; color: red">
+          No results found.
+        </div>
+        <table id="top-results" style="display: table"></table>
+      </div>
 
-    <div class="boxplot-section">
+      <div class="boxplot-section">
         <h4>Filtered GHG Emission Products</h4>
         <div class="boxplot-container">
-            <!-- <h3>Design 1</h3> -->
-            <div id="box-plot" class="boxplot" style="display: block;"></div>
-            <div id="box-plot1" class="boxplot" style="display: block;"></div>
-            <!-- <div id="box-plot2" class="boxplot" style="display: block;"></div> -->
-            <div id="box-plot3" class="boxplot" style="display: block;"></div>
+          <!-- <h3>Design 1</h3> -->
+          <div id="box-plot" class="boxplot" style="display: block"></div>
+          <div id="box-plot1" class="boxplot" style="display: block"></div>
+          <!-- <div id="box-plot2" class="boxplot" style="display: block;"></div> -->
+          <div id="box-plot3" class="boxplot" style="display: block"></div>
         </div>
-    </div>
+      </div>
 
-    <!-- Product 2 -->
-    <div class="specifications product2">
-      <h3>Design 2 Specifications</h3>
-      <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="strength-checkbox-D2" checked>
-            <label>
-                Design PSI
-            </label>
-        </div>
-        <div class="slider">
+      <!-- Product 2 -->
+      <div class="specifications product2">
+        <h3>Design 2 Specifications</h3>
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="strength-checkbox-D2" checked />
+            <label> Design PSI </label>
+          </div>
+          <div class="slider">
             <div class="min-max">
-                <span>min</span>
-                <input type="number-D2" id="min-strength-D2" class="disableable" value="4000" style="display: block;">
-                <div id="newTextboxContainer-D2" style="display: none;">
-                    <input type="text" id="newTextbox-D2" class="disableable" value="NA">
-                </div>
+              <span>min</span>
+              <input
+                type="number-D2"
+                id="min-strength-D2"
+                class="disableable"
+                value="4000"
+                style="display: block"
+              />
+              <div id="newTextboxContainer-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
-            <div class="slider-container disableable product2" id="strength-container-D2"></div>
+            <div
+              class="slider-container disableable product2"
+              id="strength-container-D2"
+            ></div>
             <div class="min-max">
-                <span>max</span>
-                <input type="number-D2" id="max-strength-D2" class="disableable" value="4000" style="display: block;">
-                <div id="newTextboxContainer2-D2" style="display: none;">
-                    <input type="text" id="newTextbox2-D2" class="disableable" value="NA">
-                </div>
+              <span>max</span>
+              <input
+                type="number-D2"
+                id="max-strength-D2"
+                class="disableable"
+                value="4000"
+                style="display: block"
+              />
+              <div id="newTextboxContainer2-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox2-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="scm-checkbox-D2" checked>
-            <label>
-                SCM pct
-            </label>
-        </div>
-        <div class="slider">
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="scm-checkbox-D2" checked />
+            <label> SCM pct </label>
+          </div>
+          <div style="margin: 10px 0">
+            <label for="scm-type-select"><strong>SCM Type:</strong></label>
+            <select id="scm-type-select" class="disableable">
+              <option value="fly_ash">Fly Ash</option>
+              <option value="slag">Slag</option>
+            </select>
+          </div>
+          <div class="slider">
             <div class="min-max">
-                <span>min</span>
-                <input type="number-D2" id="min-scm-pct-D2" class="disableable" value="0" style="display: block;">
-                <div id="newTextboxContainer3-D2" style="display: none;">
-                    <input type="text" id="newTextbox3-D2" class="disableable" value="NA">
-                </div>
+              <span>min</span>
+              <input
+                type="number-D2"
+                id="min-scm-pct-D2"
+                class="disableable"
+                value="0"
+                style="display: block"
+              />
+              <div id="newTextboxContainer3-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox3-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
-            <div class="slider-container disableable product2" id="scm-container-D2"></div>
+            <div
+              class="slider-container disableable product2"
+              id="scm-container-D2"
+            ></div>
             <div class="min-max">
-                <span>max</span>
-                <input type="number-D2" id="max-scm-pct-D2" class="disableable" value="0.3" style="display: block;">
-                <div id="newTextboxContainer4-D2" style="display: none;">
-                    <input type="text" id="newTextbox4-D2" class="disableable" value="NA">
-                </div>
+              <span>max</span>
+              <input
+                type="number-D2"
+                id="max-scm-pct-D2"
+                class="disableable"
+                value="0.3"
+                style="display: block"
+              />
+              <div id="newTextboxContainer4-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox4-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="spec-item">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="cm-checkbox-D2" checked>
-            <label>
-                CM mass
-            </label>
-        </div>
-        <select id="CM-mass-units-D2" class="disableable">
+        <div class="spec-item">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="cm-checkbox-D2" checked />
+            <label> CM mass </label>
+          </div>
+          <select id="CM-mass-units-D2" class="disableable">
             <option value="1">kg/cy</option>
             <option value="0.453592">lb/cy</option>
             <option value="0.76455485798">kg/m^3</option>
-        </select>
-        <div class="slider">
+          </select>
+          <div class="slider">
             <div class="min-max">
-                <span>min</span>
-                <input type="number-D2" id="min-cm-mass-D2" class="disableable" value="320" style="display: block;">
-                <div id="newTextboxContainer5-D2" style="display: none;">
-                    <input type="text" id="newTextbox5-D2" class="disableable" value="NA">
-                </div>
+              <span>min</span>
+              <input
+                type="number-D2"
+                id="min-cm-mass-D2"
+                class="disableable"
+                value="320"
+                style="display: block"
+              />
+              <div id="newTextboxContainer5-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox5-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
-            <div class="slider-container disableable product2" id="cm-container-D2"></div>
+            <div
+              class="slider-container disableable product2"
+              id="cm-container-D2"
+            ></div>
             <div class="min-max">
-                <span>max</span>
-                <input type="number-D2" id="max-cm-mass-D2" class="disableable" value="320" style="display: block;">
-                <div id="newTextboxContainer6-D2" style="display: none;">
-                    <input type="text" id="newTextbox6-D2" class="disableable" value="NA">
-                </div>
+              <span>max</span>
+              <input
+                type="number-D2"
+                id="max-cm-mass-D2"
+                class="disableable"
+                value="320"
+                style="display: block"
+              />
+              <div id="newTextboxContainer6-D2" style="display: none">
+                <input
+                  type="text"
+                  id="newTextbox6-D2"
+                  class="disableable"
+                  value="NA"
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div>
-        <label>1. Analyzing data...</label>
-        <div id="loading-bar-D2" style="display: none;">
-            <div id="loading-bar-progress-D2" style="width: 0%;"></div>
+        <div>
+          <label>1. Analyzing data...</label>
+          <div id="loading-bar-D2" style="display: none">
+            <div id="loading-bar-progress-D2" style="width: 0%"></div>
+          </div>
+          <div id="loading-bar-percentage-D2" style="display: none">0%</div>
         </div>
-        <div id="loading-bar-percentage-D2" style="display: none;">0%</div>
-    </div>
 
-    <div>
-        <label>2. Plotting data...</label>
-        <div id="loading-bar2-D2" style="display: none;">
-            <div id="loading-bar-progress2-D2" style="width: 0%;"></div>
+        <div>
+          <label>2. Plotting data...</label>
+          <div id="loading-bar2-D2" style="display: none">
+            <div id="loading-bar-progress2-D2" style="width: 0%"></div>
+          </div>
+          <div id="loading-bar-percentage2-D2" style="display: none">0%</div>
         </div>
-        <div id="loading-bar-percentage2-D2" style="display: none;">0%</div>
-    </div>
-    </div>
+      </div>
 
-    <div class="lowest-ghg product2">
+      <div class="lowest-ghg product2">
         <h3>Concrete Products with Lowest GHG Emissions - Design 2</h3>
         <label for="top-products-D2">Top Products: </label>
         <select id="top-products-D2">
-            <option value="1">Top 1</option>
-            <option value="5">Top 5</option>
-            <option value="10">Top 10</option>
+          <option value="1">Top 1</option>
+          <option value="5">Top 5</option>
+          <option value="10">Top 10</option>
         </select>
 
         <label for="design-psi-select-D2">Filtering by Design PSI: </label>
         <select id="design-psi-select-D2">
-            <option value="all">All</option>
+          <option value="all">All</option>
         </select>
-        <div id="no-results-message-table2" style="display: none; color: red;">No results found.</div>
-        <table id="top-results-D2" style="display: table;"></table>
+        <div id="no-results-message-table2" style="display: none; color: red">
+          No results found.
+        </div>
+        <table id="top-results-D2" style="display: table"></table>
+      </div>
 
-
+      <div class="overall-ghg-container">
+        <div id="ghg-box-plot" class="boxplot" style="display: none"></div>
+      </div>
     </div>
-
-    <div class="overall-ghg-container">
-        <div id="ghg-box-plot" class="boxplot" style="display:none;"></div>
-    </div>
-
-  </div>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
 </html>

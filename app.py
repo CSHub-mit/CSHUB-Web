@@ -7,8 +7,8 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 
 # Configure database URI
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # This will fetch the DATABASE_URL from environment variables
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # This will fetch the DATABASE_URL from environment variables
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

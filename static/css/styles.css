@@ -149,6 +149,22 @@ body.dark-mode .state-selector select {
   border-radius: 8px;
 }
 
+#scm-type-select {
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #2D3748;
+  background-color: #eeeff0;
+  color: #2D3748;
+  font-size: 14px;
+}
+
+body.dark-mode #scm-type-select {
+  background-color: #2D3748;
+  color: #E2E8F0;
+  border: 1px solid #4A5568;
+}
+
+
 
 /* Product 2 Styles */
 .specifications.product2 {
