@@ -49,16 +49,57 @@ cmCheckbox_D2.addEventListener('change', function () {
 
 ////////////Construct requests to API endpoints (min/max values to filter for); without design psi///////
 //////////////////////--------------------DESIGN 1----------------------////////////////////////////
+// function createRequestBody() {
+//     /**
+//      * This function creates a request body for Design 1 to be sent to various endpoints later on.
+//      * The information included in this request body includes the minimum and maximum values on each
+//      * dual ended slider related to D1 and does not include design psi.
+//      * If the respective sliders' checkbox is unchecked, the min and max is instead set as null.
+//      */
+//     let minStrength, maxStrength;
+//     if (strengthCheckbox.checked) {
+//         minStrength = parseFloat(slider.noUiSlider.get()[0]); //reads the value of corresponding slider
+//         maxStrength = parseFloat(slider.noUiSlider.get()[1]);
+//     } else {
+//         minStrength = null;
+//         maxStrength = null;
+//     }
+
+//     let minScmPct, maxScmPct;
+//     if (scmCheckbox.checked) {
+//         minScmPct = parseFloat(scm_slider.noUiSlider.get()[0]);
+//         maxScmPct = parseFloat(scm_slider.noUiSlider.get()[1]);
+//     } else {
+//         minScmPct = null;
+//         maxScmPct = null;
+//     }
+
+//     let minCmMass, maxCmMass;
+//     if (cmCheckbox.checked) {
+//         minCmMass = parseFloat(cm_slider.noUiSlider.get()[0] * unitMultiplier);
+//         maxCmMass = parseFloat(cm_slider.noUiSlider.get()[1] * unitMultiplier);
+//     } else {
+//         minCmMass = null;
+//         maxCmMass = null;
+//     }
+
+//     return {
+//         min_strength: minStrength,
+//         max_strength: maxStrength,
+//         min_scm_pct: minScmPct,
+//         max_scm_pct: maxScmPct,
+//         min_cm_mass: minCmMass,
+//         max_cm_mass: maxCmMass
+//     };
+// }
 function createRequestBody() {
     /**
      * This function creates a request body for Design 1 to be sent to various endpoints later on.
-     * The information included in this request body includes the minimum and maximum values on each
-     * dual ended slider related to D1 and does not include design psi.
-     * If the respective sliders' checkbox is unchecked, the min and max is instead set as null.
+     * It includes min and max values for the sliders, converting CM mass to kg/cy if necessary.
      */
     let minStrength, maxStrength;
     if (strengthCheckbox.checked) {
-        minStrength = parseFloat(slider.noUiSlider.get()[0]); //reads the value of corresponding slider
+        minStrength = parseFloat(slider.noUiSlider.get()[0]);
         maxStrength = parseFloat(slider.noUiSlider.get()[1]);
     } else {
         minStrength = null;
@@ -76,8 +117,12 @@ function createRequestBody() {
 
     let minCmMass, maxCmMass;
     if (cmCheckbox.checked) {
-        minCmMass = parseFloat(cm_slider.noUiSlider.get()[0] * unitMultiplier);
-        maxCmMass = parseFloat(cm_slider.noUiSlider.get()[1] * unitMultiplier);
+        // 🔁 Get the current unit directly from the dropdown
+        const selectedUnit = document.getElementById('CM-mass-units').value;
+        const conversionFactor = parseFloat(selectedUnit);  // e.g., 1 for kg, 0.453592 for lbs
+
+        minCmMass = parseFloat(cm_slider.noUiSlider.get()[0]) * conversionFactor;
+        maxCmMass = parseFloat(cm_slider.noUiSlider.get()[1]) * conversionFactor;
     } else {
         minCmMass = null;
         maxCmMass = null;
@@ -92,6 +137,7 @@ function createRequestBody() {
         max_cm_mass: maxCmMass
     };
 }
+
 
 //////////////////////--------------------DESIGN 2----------------------////////////////////////////
 function createRequestBody_D2() {
@@ -1887,4 +1933,87 @@ function applyDarkModeIfNeeded(plotId) {
 
 document.addEventListener('DOMContentLoaded', function() {
     filterData();
+});
+
+//dropdown excel
+
+document.getElementById('state-dropdown').addEventListener('change', function () {
+    const selectedState = this.value;
+    const selectedSCMType = document.getElementById('scm-type-select').value;
+
+    fetch('/get_state_specs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ state: selectedState })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+            return;
+        }
+
+        // Extract values with fallbacks
+        const minCM = data.min_cm_mass ?? 0;
+        const maxCM = 800; // Default max CM unless you want to use another column
+        const maxAllSCM = data.max_all_scm ?? 1;
+        // Convert lbs from Excel to kg since your database is in kg/cy
+
+        // // CHANGES IN CONVERSION
+        // const minCM_lbs = data.min_cm_mass ?? 0;
+        // const minCM = minCM_lbs * 0.453592;  // conversion to kg
+        // const maxCM = 800;  // keep this or adjust if needed
+        // const maxAllSCM = data.max_all_scm ?? 1;
+
+
+
+        // Pick correct SCM type value
+        const maxSCMByType = {
+            "fly_ash": data.max_fly_ash,
+            "slag": data.max_slag,
+            "silica_fume": data.max_silica_fume,
+            "natural_pozzolan": data.max_natural_pozzolan,
+            "all scm": data.max_all_scm
+        }[selectedSCMType] ?? maxAllSCM;
+        
+      
+
+        // -------- Update CM Slider --------
+        cm_slider.noUiSlider.updateOptions({
+            range: {
+                min: minCM,
+                max: maxCM
+            },
+            start: [minCM, maxCM]
+        });
+        document.getElementById('min-cm-mass').value = minCM;
+        document.getElementById('max-cm-mass').value = maxCM;
+
+        // -------- Update SCM Slider --------
+        scm_slider.noUiSlider.updateOptions({
+            range: {
+                min: 0,
+                max: maxSCMByType
+            },
+            start: [0, maxSCMByType]
+        });
+        document.getElementById('min-scm-pct').value = 0;
+        document.getElementById('max-scm-pct').value = maxSCMByType;
+
+      
+        
+
+        // Filter with new values
+        debouncedFilterData();
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
+});
+
+// When SCM type is changed, re-trigger the state logic
+document.getElementById('scm-type-select').addEventListener('change', () => {
+    document.getElementById('state-dropdown').dispatchEvent(new Event('change'));
 });

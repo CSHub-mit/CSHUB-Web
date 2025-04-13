@@ -3,12 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 from flask_migrate import Migrate
+import pandas as pd
+spec_df = pd.read_excel('concrete_specs_all_states.xlsx')
+
 
 app = Flask(__name__)
 
 # Configure database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # This will fetch the DATABASE_URL from environment variables
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # This will fetch the DATABASE_URL from environment variables
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cshub_user:VHHbz2TW8DZrBAagdtY1hyqApWq0qKs4@dpg-cvl7t6c9c44c73fbhs7g-a.oregon-postgres.render.com/cshub'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -287,6 +292,32 @@ def filter_designPSI_data():
     except Exception as e:
         logger.error(f"Error in filter_data: {e}")
         return jsonify({'error': 'Internal Server Error'}), 500
+
+@app.route('/get_state_specs', methods=['POST'])
+def get_state_specs():
+    data = request.get_json()
+    state = data.get('state')
+
+    if not state:
+        return jsonify({'error': 'No state provided'}), 400
+
+    row = spec_df[spec_df['States'] == state]
+
+    if row.empty:
+        return jsonify({'error': 'State not found'}), 404
+
+    row = row.iloc[0]
+
+    return jsonify({
+        'min_cm_mass': row['Min CM mass (lbs/cy)'] if not pd.isna(row['Min CM mass (lbs/cy)']) else 0,
+        'max_wb': row['Max w/b'] if not pd.isna(row['Max w/b']) else None,
+        'max_fly_ash': row['Max fly ash'] if not pd.isna(row['Max fly ash']) else None,
+        'max_slag': row['Max slag'] if not pd.isna(row['Max slag']) else None,
+        'max_silica_fume': row['Max silica fume'] if not pd.isna(row['Max silica fume']) else None,
+        'max_natural_pozzolan': row['Max natural pozzolan'] if not pd.isna(row['Max natural pozzolan']) else None,
+        'max_all_scm': row['Max all SCM'] if not pd.isna(row['Max all SCM']) else None
+    })
+
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)  # Flask server will run on http://localhost:3000
