@@ -12,7 +12,10 @@ app = Flask(__name__)
 # Configure database URI
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # This will fetch the DATABASE_URL from environment variables
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cshub_user:VHHbz2TW8DZrBAagdtY1hyqApWq0qKs4@dpg-cvl7t6c9c44c73fbhs7g-a.oregon-postgres.render.com/cshub'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cshub_user:VHHbz2TW8DZrBAagdtY1hyqApWq0qKs4@dpg-cvl7t6c9c44c73fbhs7g-a.oregon-postgres.render.com/cshub'
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://neondb_owner:npg_FgPf4SYL8xNt@ep-holy-truth-a4umlkhs-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
