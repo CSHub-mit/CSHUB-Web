@@ -149,7 +149,7 @@ body.dark-mode .state-selector select {
   border-radius: 8px;
 }
 
-#scm-type-select {
+#scm-type-select, #scm-type-select-D2 {
   padding: 6px;
   border-radius: 5px;
   border: 1px solid #2D3748;

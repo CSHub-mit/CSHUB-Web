@@ -4,7 +4,7 @@ import os
 import logging
 from flask_migrate import Migrate
 import pandas as pd
-spec_df = pd.read_excel('concrete_specs_all_states.xlsx')
+spec_df = pd.read_excel('concrete_specs_all_states_clean.xlsx')
 
 
 app = Flask(__name__)
@@ -314,7 +314,7 @@ def get_state_specs():
         'max_fly_ash': row['Max fly ash'] if not pd.isna(row['Max fly ash']) else None,
         'max_slag': row['Max slag'] if not pd.isna(row['Max slag']) else None,
         'max_silica_fume': row['Max silica fume'] if not pd.isna(row['Max silica fume']) else None,
-        'max_natural_pozzolan': row['Max natural pozzolan'] if not pd.isna(row['Max natural pozzolan']) else None,
+        'max_natural_pozzolan': row['Max pozzolan'] if not pd.isna(row['Max pozzolan']) else None,
         'max_all_scm': row['Max all SCM'] if not pd.isna(row['Max all SCM']) else None
     })
 

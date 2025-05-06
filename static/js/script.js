@@ -164,8 +164,15 @@ function createRequestBody_D2() {
 
     let minCmMass_D2, maxCmMass_D2;
     if (cmCheckbox_D2.checked) {
-        minCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[0] * unitMultiplier_D2);
-        maxCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[1] * unitMultiplier_D2);
+        //recent change here in units
+        // minCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[0] * unitMultiplier_D2);
+        // maxCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[1] * unitMultiplier_D2);
+        const selectedUnit = document.getElementById('CM-mass-units-D2').value;
+        const conversionFactor = parseFloat(selectedUnit);  // e.g. 1 for kg, 0.453592 for lbs
+
+minCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[0]) * conversionFactor;
+maxCmMass_D2 = parseFloat(cm_slider_D2.noUiSlider.get()[1]) * conversionFactor;
+
     } else {
         minCmMass_D2 = null;
         maxCmMass_D2 = null;
@@ -1959,13 +1966,7 @@ document.getElementById('state-dropdown').addEventListener('change', function ()
         const minCM = data.min_cm_mass ?? 0;
         const maxCM = 800; // Default max CM unless you want to use another column
         const maxAllSCM = data.max_all_scm ?? 1;
-        // Convert lbs from Excel to kg since your database is in kg/cy
 
-        // // CHANGES IN CONVERSION
-        // const minCM_lbs = data.min_cm_mass ?? 0;
-        // const minCM = minCM_lbs * 0.453592;  // conversion to kg
-        // const maxCM = 800;  // keep this or adjust if needed
-        // const maxAllSCM = data.max_all_scm ?? 1;
 
 
 
@@ -2013,7 +2014,77 @@ document.getElementById('state-dropdown').addEventListener('change', function ()
     });
 });
 
+
 // When SCM type is changed, re-trigger the state logic
 document.getElementById('scm-type-select').addEventListener('change', () => {
     document.getElementById('state-dropdown').dispatchEvent(new Event('change'));
+});
+
+//event listener for design 2
+
+document.getElementById('state-dropdown-D2').addEventListener('change', function () {
+    const selectedState = this.value;
+    const selectedSCMType = document.getElementById('scm-type-select-D2').value;
+
+    fetch('/get_state_specs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ state: selectedState })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+            return;
+        }
+
+        // Extract values with fallbacks
+        const minCM = data.min_cm_mass ?? 0;
+        const maxCM = 800; // Default max CM unless you want to use another column
+        const maxAllSCM = data.max_all_scm ?? 1;
+
+        // Pick correct SCM type value
+        const maxSCMByType = {
+            "fly_ash": data.max_fly_ash,
+            "slag": data.max_slag,
+            "silica_fume": data.max_silica_fume,
+            "natural_pozzolan": data.max_natural_pozzolan,
+            "all scm": data.max_all_scm
+        }[selectedSCMType] ?? maxAllSCM;
+
+        // -------- Update CM Slider --------
+        cm_slider_D2.noUiSlider.updateOptions({
+            range: {
+                min: minCM,
+                max: maxCM
+            },
+            start: [minCM, maxCM]
+        });
+        document.getElementById('min-cm-mass-D2').value = minCM;
+        document.getElementById('max-cm-mass-D2').value = maxCM;
+
+        // -------- Update SCM Slider --------
+        scm_slider_D2.noUiSlider.updateOptions({
+            range: {
+                min: 0,
+                max: maxSCMByType
+            },
+            start: [0, maxSCMByType]
+        });
+        document.getElementById('min-scm-pct-D2').value = 0;
+        document.getElementById('max-scm-pct-D2').value = maxSCMByType;
+
+        // Trigger Design 2 filter
+        debouncedFilterData_D2();
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
+});
+
+// Re-trigger state logic when SCM type changes
+document.getElementById('scm-type-select-D2').addEventListener('change', () => {
+    document.getElementById('state-dropdown-D2').dispatchEvent(new Event('change'));
 });
