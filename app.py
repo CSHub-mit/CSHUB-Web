@@ -322,5 +322,21 @@ def get_state_specs():
     })
 
 
+
+@app.route('/ghg_map_data')
+def ghg_map_data():
+    try:
+        df = pd.read_excel('GHG_saving_cem_usage.xlsx')
+        df = df[['state', 'unit_GHG_saving', 'GHG_label']]
+        df = df.dropna(subset=['state', 'unit_GHG_saving', 'GHG_label'])
+
+        # Convert state abbreviations to uppercase two-letter codes
+        df['state'] = df['state'].str.upper()
+
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(port=3000, debug=True)  # Flask server will run on http://localhost:3000

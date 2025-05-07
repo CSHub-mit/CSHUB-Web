@@ -1939,9 +1939,204 @@ function applyDarkModeIfNeeded(plotId) {
 ///////////////////////////////START BY FILTERING DATA//////////////////////////////////
 
 document.addEventListener('DOMContentLoaded', function() {
+    loadAndDrawGHGMaps();        
     filterData();
 });
+// async function loadAndDrawGHGMaps() {
+//     try {
+//         const res = await fetch('/ghg_map_data');
+//         const data = await res.json();
 
+//         const labels = ['Conservative', 'Moderate', 'Ambitious'];
+//         const allTraces = [];
+
+//         const colorScale = 'YlGnBu';
+
+//         labels.forEach((label, i) => {
+//             const filtered = data.filter(d => d.GHG_label === label);
+//             const states = filtered.map(d => d.state);
+//             const values = filtered.map(d => d.unit_GHG_saving);
+
+//             allTraces.push({
+//                 type: 'choropleth',
+//                 locationmode: 'USA-states',
+//                 locations: states,
+//                 z: values,
+//                 zauto: false,
+//                 zmin: 0,
+//                 zmax: 140, // adjust as needed
+//                 colorscale: colorScale,
+//                 showscale: i === 2,  // Only show bar on last map
+//                 colorbar: i === 2 ? {
+//                     title: 'GHG Saving (lbs/cy)',
+//                     thickness: 10,
+//                     len: 0.8,
+//                     x: 1.02  // Position the bar to the far right
+//                 } : undefined,
+//                 geo: `geo${i + 1}`,
+//                 name: label
+//             });
+//         });
+        
+//         const layout = {
+//             title: {
+//                 text: 'GHG Savings by State',
+//                 x: 0.5,
+//                 font: { size: 20 }
+//             },
+//             margin: { t: 50, l: 20, r: 20, b: 0 },
+//             grid: { rows: 1, columns: 3, pattern: 'independent' },
+//             geo1: {
+//                 domain: { row: 0, column: 0 },
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white'
+//             },
+//             geo2: {
+//                 domain: { row: 0, column: 1 },
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white'
+//             },
+//             geo3: {
+//                 domain: { row: 0, column: 2 },
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white'
+//             }
+//         };
+
+//         Plotly.newPlot('shared-map-container', allTraces, layout, { responsive: true });
+//     } catch (error) {
+//         console.error('Error loading GHG map data:', error);
+//     }
+// }
+async function loadAndDrawGHGMaps() {
+    try {
+      const res = await fetch('/ghg_map_data');
+      const data = await res.json();
+  
+      const labels = ['Conservative', 'Moderate', 'Ambitious'];
+  
+      labels.forEach(label => {
+        const filtered = data.filter(d => d.GHG_label === label);
+        const states = filtered.map(d => d.state);
+        const values = filtered.map(d => d.unit_GHG_saving);
+  
+        const trace = {
+          type: 'choropleth',
+          locationmode: 'USA-states',
+          locations: states,
+          z: values,
+          colorscale: 'Hot',
+          
+          colorbar: { title: 'GHG Saving (lbs/cy)' },
+          hoverinfo: 'location+z'
+        };
+  
+        const layout = {
+          geo: {
+            scope: 'usa',
+            projection: { type: 'albers usa' },
+            showlakes: true,
+            lakecolor: 'rgb(255,255,255)'
+          },
+          margin: { t: 40, b: 0 },
+          title: `${label} GHG Savings by State`
+        };
+  
+        Plotly.newPlot(`map-${label.toLowerCase()}`, [trace], layout, { responsive: true });
+      });
+    } catch (error) {
+      console.error('Error loading GHG map data:', error);
+    }
+  }
+  
+// async function loadAndDrawGHGMaps() {
+//     try {
+//         const res = await fetch('/ghg_map_data');
+//         const data = await res.json();
+
+//         const labels = ['Conservative', 'Moderate', 'Ambitious'];
+//         const allTraces = [];
+//         const colorScale = 'YlGnBu';
+
+//         labels.forEach((label, i) => {
+//             const filtered = data.filter(d => d.GHG_label === label);
+//             const states = filtered.map(d => d.state);
+//             const values = filtered.map(d => d.unit_GHG_saving);
+
+//             allTraces.push({
+//                 type: 'choropleth',
+//                 locationmode: 'USA-states',
+//                 locations: states,
+//                 z: values,
+//                 zauto: false,
+//                 zmin: 0,
+//                 zmax: 140,
+//                 colorscale: colorScale,
+//                 showscale: i === 2,
+//                 colorbar: i === 2 ? {
+//                     title: 'GHG Saving (lbs/cy)',
+//                     thickness: 10,
+//                     len: 0.8,
+//                     x: 1.02
+//                 } : undefined,
+//                 geo: `geo${i + 1}`,
+//                 name: label
+//             });
+//         });
+        
+
+        
+
+        
+//         const layout = {
+//             title: {
+//                 text: 'GHG Savings by State',
+//                 x: 0.5,
+//                 font: { size: 20 }
+//             },
+//             margin: { t: 50, l: 20, r: 20, b: 0 },
+//             grid: { rows: 1, columns: 3, pattern: 'independent' },
+//             // Explicitly configure all geo subplots
+//             geo1: {
+//                 domain: { x: [0, 0.33], y: [0, 1] },  // First third
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white',
+//                 showframe: false,
+//                 showcoastlines: false
+//             },
+//             geo2: {
+//                 domain: { x: [0.33, 0.66], y: [0, 1] },  // Middle third
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white',
+//                 showframe: false,
+//                 showcoastlines: false
+//             },
+//             geo3: {
+//                 domain: { x: [0.66, 1], y: [0, 1] },  // Last third
+//                 scope: 'usa',
+//                 projection: { type: 'albers usa' },
+//                 showlakes: true,
+//                 lakecolor: 'white',
+//                 showframe: false,
+//                 showcoastlines: false
+//             }
+//         };
+
+//         Plotly.newPlot('shared-map-container', allTraces, layout, { responsive: true });
+//     } catch (error) {
+//         console.error('Error loading GHG map data:', error);
+//     }
+// }
 //dropdown excel
 
 document.getElementById('state-dropdown').addEventListener('change', function () {
