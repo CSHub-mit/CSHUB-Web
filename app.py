@@ -338,5 +338,40 @@ def ghg_map_data():
         return jsonify({'error': str(e)}), 500
 
 
+# three graphs
+
+@app.route('/scm_limits_data')
+def scm_limits_data():
+    try:
+        df = spec_df.copy()
+
+        result = {
+            "both": [],
+            "min_only": [],
+            "max_only": []
+        }
+
+        for _, row in df.iterrows():
+            state = row['States abbrev']
+            min_cm = row['Min CM mass (lbs/cy)']
+            max_scm = row['Max all SCM']
+
+            # Convert NaNs to None for JSON safety
+            min_cm = None if pd.isna(min_cm) else min_cm
+            max_scm = None if pd.isna(max_scm) else max_scm
+
+            if min_cm is not None and max_scm is not None:
+                result["both"].append({"state": state, "minCM": min_cm, "maxSCM": max_scm})
+            elif min_cm is not None:
+                result["min_only"].append({"state": state, "minCM": min_cm})
+            elif max_scm is not None:
+                result["max_only"].append({"state": state, "maxSCM": max_scm})
+
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(port=3000, debug=True)  # Flask server will run on http://localhost:3000

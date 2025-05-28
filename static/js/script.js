@@ -1942,78 +1942,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAndDrawGHGMaps();        
     filterData();
 });
-// async function loadAndDrawGHGMaps() {
-//     try {
-//         const res = await fetch('/ghg_map_data');
-//         const data = await res.json();
-
-//         const labels = ['Conservative', 'Moderate', 'Ambitious'];
-//         const allTraces = [];
-
-//         const colorScale = 'YlGnBu';
-
-//         labels.forEach((label, i) => {
-//             const filtered = data.filter(d => d.GHG_label === label);
-//             const states = filtered.map(d => d.state);
-//             const values = filtered.map(d => d.unit_GHG_saving);
-
-//             allTraces.push({
-//                 type: 'choropleth',
-//                 locationmode: 'USA-states',
-//                 locations: states,
-//                 z: values,
-//                 zauto: false,
-//                 zmin: 0,
-//                 zmax: 140, // adjust as needed
-//                 colorscale: colorScale,
-//                 showscale: i === 2,  // Only show bar on last map
-//                 colorbar: i === 2 ? {
-//                     title: 'GHG Saving (lbs/cy)',
-//                     thickness: 10,
-//                     len: 0.8,
-//                     x: 1.02  // Position the bar to the far right
-//                 } : undefined,
-//                 geo: `geo${i + 1}`,
-//                 name: label
-//             });
-//         });
-        
-//         const layout = {
-//             title: {
-//                 text: 'GHG Savings by State',
-//                 x: 0.5,
-//                 font: { size: 20 }
-//             },
-//             margin: { t: 50, l: 20, r: 20, b: 0 },
-//             grid: { rows: 1, columns: 3, pattern: 'independent' },
-//             geo1: {
-//                 domain: { row: 0, column: 0 },
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white'
-//             },
-//             geo2: {
-//                 domain: { row: 0, column: 1 },
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white'
-//             },
-//             geo3: {
-//                 domain: { row: 0, column: 2 },
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white'
-//             }
-//         };
-
-//         Plotly.newPlot('shared-map-container', allTraces, layout, { responsive: true });
-//     } catch (error) {
-//         console.error('Error loading GHG map data:', error);
-//     }
-// }
+//the correct one
 async function loadAndDrawGHGMaps() {
     try {
       const res = await fetch('/ghg_map_data');
@@ -2054,90 +1983,177 @@ async function loadAndDrawGHGMaps() {
       console.error('Error loading GHG map data:', error);
     }
   }
-  
+
+
+
 // async function loadAndDrawGHGMaps() {
 //     try {
 //         const res = await fetch('/ghg_map_data');
 //         const data = await res.json();
 
 //         const labels = ['Conservative', 'Moderate', 'Ambitious'];
-//         const allTraces = [];
-//         const colorScale = 'YlGnBu';
+//         const traces = [];
+//         let minValue = Infinity;
+//         let maxValue = -Infinity;
 
+//         // First pass to determine min and max values across all data
+//         labels.forEach(label => {
+//             const filtered = data.filter(d => d.GHG_label === label);
+//             const values = filtered.map(d => d.unit_GHG_saving);
+//             minValue = Math.min(minValue, ...values);
+//             maxValue = Math.max(maxValue, ...values);
+//         });
+
+//         // Create traces for each scenario
 //         labels.forEach((label, i) => {
 //             const filtered = data.filter(d => d.GHG_label === label);
 //             const states = filtered.map(d => d.state);
 //             const values = filtered.map(d => d.unit_GHG_saving);
 
-//             allTraces.push({
+//             traces.push({
 //                 type: 'choropleth',
 //                 locationmode: 'USA-states',
 //                 locations: states,
 //                 z: values,
-//                 zauto: false,
-//                 zmin: 0,
-//                 zmax: 140,
-//                 colorscale: colorScale,
-//                 showscale: i === 2,
-//                 colorbar: i === 2 ? {
+//                 zmin: minValue,
+//                 zmax: maxValue,
+//                 colorscale: 'Hot',
+//                 showscale: i === 1, // Only show colorbar for the middle plot
+//                 colorbar: { 
 //                     title: 'GHG Saving (lbs/cy)',
-//                     thickness: 10,
 //                     len: 0.8,
-//                     x: 1.02
-//                 } : undefined,
-//                 geo: `geo${i + 1}`,
-//                 name: label
+//                     y: 0.5,
+//                     yanchor: 'middle'
+//                 },
+//                 hoverinfo: 'location+z',
+//                 name: label,
+//                 geo: `geo${i+1}`
 //             });
 //         });
-        
-
-        
-
-        
 //         const layout = {
-//             title: {
-//                 text: 'GHG Savings by State',
-//                 x: 0.5,
-//                 font: { size: 20 }
-//             },
-//             margin: { t: 50, l: 20, r: 20, b: 0 },
-//             grid: { rows: 1, columns: 3, pattern: 'independent' },
-//             // Explicitly configure all geo subplots
-//             geo1: {
-//                 domain: { x: [0, 0.33], y: [0, 1] },  // First third
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white',
-//                 showframe: false,
-//                 showcoastlines: false
-//             },
-//             geo2: {
-//                 domain: { x: [0.33, 0.66], y: [0, 1] },  // Middle third
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white',
-//                 showframe: false,
-//                 showcoastlines: false
-//             },
-//             geo3: {
-//                 domain: { x: [0.66, 1], y: [0, 1] },  // Last third
-//                 scope: 'usa',
-//                 projection: { type: 'albers usa' },
-//                 showlakes: true,
-//                 lakecolor: 'white',
-//                 showframe: false,
-//                 showcoastlines: false
-//             }
-//         };
+//     geo1: {
+//         domain: { x: [0, 0.3], y: [0, 1] },
+//         scope: 'usa',
+//         projection: { type: 'albers usa' },
+//         showlakes: true,
+//         lakecolor: 'rgb(255,255,255)'
+//     },
+//     geo2: {
+//         domain: { x: [0.35, 0.65], y: [0, 1] },
+//         scope: 'usa',
+//         projection: { type: 'albers usa' },
+//         showlakes: true,
+//         lakecolor: 'rgb(255,255,255)'
+//     },
+//     geo3: {
+//         domain: { x: [0.7, 1], y: [0, 1] },
+//         scope: 'usa',
+//         projection: { type: 'albers usa' },
+//         showlakes: true,
+//         lakecolor: 'rgb(255,255,255)'
+//     },
+//     annotations: [
+//         {
+//             text: 'Conservative',
+//             showarrow: false,
+//             x: 0.15,
+//             y: 1.05,
+//             xanchor: 'center',
+//             yanchor: 'bottom',
+//             font: { size: 16 }
+//         },
+//         {
+//             text: 'Moderate',
+//             showarrow: false,
+//             x: 0.5,
+//             y: 1.05,
+//             xanchor: 'center',
+//             yanchor: 'bottom',
+//             font: { size: 16 }
+//         },
+//         {
+//             text: 'Ambitious',
+//             showarrow: false,
+//             x: 0.85,
+//             y: 1.05,
+//             xanchor: 'center',
+//             yanchor: 'bottom',
+//             font: { size: 16 }
+//         }
+//     ],
+//     margin: { t: 40, b: 0, l: 0, r: 0 },
+//     showlegend: false
+// };
 
-//         Plotly.newPlot('shared-map-container', allTraces, layout, { responsive: true });
+
+
+//         Plotly.newPlot('ghg-maps-container', traces, layout, { responsive: true });
 //     } catch (error) {
 //         console.error('Error loading GHG map data:', error);
 //     }
 // }
-//dropdown excel
+
+// async function loadAndDrawGHGMaps() {
+//   try {
+//     const res = await fetch('/ghg_map_data');
+//     const data = await res.json();
+
+//     const labels = ['Conservative', 'Moderate', 'Ambitious'];
+//     const traces = [];
+//     const geoLayouts = {};
+
+//     // Compute global zmin/zmax
+//     const allValues = data.map(d => d.unit_GHG_saving);
+//     const zmin = Math.min(...allValues);
+//     const zmax = Math.max(...allValues);
+
+//     labels.forEach((label, idx) => {
+//       const filtered = data.filter(d => d.GHG_label === label);
+//       const states = filtered.map(d => d.state);
+//       const values = filtered.map(d => d.unit_GHG_saving);
+
+//       traces.push({
+//         type: 'choropleth',
+//         locationmode: 'USA-states',
+//         locations: states,
+//         z: values,
+//         zmin: zmin,
+//         zmax: zmax,
+//         colorscale: 'Hot',
+//         geo: `geo${idx + 1}`,
+//         showscale: idx === 2,  // Only last map shows colorbar
+//         colorbar: idx === 2 ? {
+//           title: 'GHG Saving (lbs/cy)',
+//           x: 1.05  // Push colorbar far right
+//         } : undefined,
+//         hoverinfo: 'location+z'
+//       });
+
+//       geoLayouts[`geo${idx + 1}`] = {
+//         scope: 'usa',
+//         projection: { type: 'albers usa' },
+//         domain: {
+//           x: [idx * (1 / 3), (idx + 1) * (1 / 3)],
+//           y: [0, 1]
+//         },
+//         showlakes: true,
+//         lakecolor: 'rgb(255,255,255)'
+//       };
+//     });
+
+//     const layout = {
+//       title: 'GHG Savings by State',
+//       margin: { t: 50, b: 20 },
+//       ...geoLayouts
+//     };
+
+//     Plotly.newPlot('ghg-maps-container', traces, layout, { responsive: true });
+
+//   } catch (error) {
+//     console.error('Error loading GHG map data:', error);
+//   }
+// }
+
 
 document.getElementById('state-dropdown').addEventListener('change', function () {
     const selectedState = this.value;
@@ -2283,3 +2299,98 @@ document.getElementById('state-dropdown-D2').addEventListener('change', function
 document.getElementById('scm-type-select-D2').addEventListener('change', () => {
     document.getElementById('state-dropdown-D2').dispatchEvent(new Event('change'));
 });
+
+function getSelectedStates() {
+  const state1 = document.getElementById('state-dropdown').value;
+  const state2 = document.getElementById('state-dropdown-D2').value;
+
+  const selectedStates = new Set();
+  if (state1) selectedStates.add(state1);
+  if (state2) selectedStates.add(state2);
+
+  return Array.from(selectedStates);
+}
+
+
+// three graphs
+function plotSCMGraphs(data) {
+    console.log("Plotting SCM Graphs with data:", data);  // Debug line
+    // Plot 1: Both Min CM and Max SCM (scatter plot)
+    const bothTrace = {
+        x: data.both.map(d => d.minCM),
+        y: data.both.map(d => d.maxSCM),
+        text: data.both.map(d => d.state),
+        mode: 'markers+text',
+        type: 'scatter',
+        name: 'Both',
+        textposition: 'top center',
+        marker: { color: 'black', size: 8 }
+    };
+
+    Plotly.newPlot('graph-both', [bothTrace], {
+        title: '1. Min CM + Max SCM',
+        xaxis: { title: 'Min CM limit (lbs/cy)' },
+        yaxis: { title: 'Max SCM limit (%)' }
+    });
+
+    // Plot 2: Min CM Only (vertical lines)
+    const minLines = data.min_only.map(d => ({
+        type: 'line',
+        x0: d.minCM,
+        x1: d.minCM,
+        y0: 0,
+        y1: 1,
+        line: { color: 'red', dash: 'dash' }
+    }));
+
+    const minTextTrace = {
+        x: data.min_only.map(d => d.minCM),
+        y: data.min_only.map(_ => 0.5),
+        text: data.min_only.map(d => d.state),
+        mode: 'text',
+        type: 'scatter',
+        textposition: 'top center',
+        showlegend: false
+    };
+
+    Plotly.newPlot('graph-min', [minTextTrace], {
+        title: '2. Min CM Only',
+        xaxis: { title: 'Min CM limit (lbs/cy)' },
+        yaxis: { title: 'SCM (%)', range: [0, 1] },
+        shapes: minLines
+    });
+
+    // Plot 3: Max SCM Only (horizontal lines)
+    const maxLines = data.max_only.map(d => ({
+        type: 'line',
+        x0: 0,
+        x1: 1,
+        y0: d.maxSCM,
+        y1: d.maxSCM,
+        line: { color: 'red', dash: 'dash' }
+    }));
+
+    const maxTextTrace = {
+        x: data.max_only.map(_ => 0.5),
+        y: data.max_only.map(d => d.maxSCM),
+        text: data.max_only.map(d => d.state),
+        mode: 'text',
+        type: 'scatter',
+        textposition: 'middle center',
+        showlegend: false
+    };
+
+    Plotly.newPlot('graph-max', [maxTextTrace], {
+        title: '3. Max SCM Only',
+        xaxis: { title: 'CM mass (dummy)', range: [0, 1] },
+        yaxis: { title: 'Max SCM limit (%)' },
+        shapes: maxLines
+    });
+}
+
+// Call this when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/scm_limits_data')
+        .then(res => res.json())
+        .then(data => plotSCMGraphs(data));
+}); 
